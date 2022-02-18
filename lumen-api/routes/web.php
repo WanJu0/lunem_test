@@ -18,10 +18,10 @@ $router->get('/', function () use ($router) {
 });
 
 
-    $router->get('/posts/{id}', 'PostController@index');
+    $router->get('/posts', 'PostController@showAllposts');
     $router->get('/posts/{id}', 'PostController@show');
-    $router->post('/posts/create', 'PostController@store');
-    $router->put('/posts/update/{id}', 'PostController@update');
-    $router->delete('/posts/delete/{id}', 'PostController@destory');
-
+    $router->post('/posts', 'PostController@create');
+    $router->delete('/posts/{id}', 'PostController@delete');
+    $router->put('/posts/{id}', 'PostController@update');
+    
 

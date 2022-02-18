@@ -9,93 +9,37 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
-    public function index()
+    public function showAllposts()
     {
-        $posts = Post::all();
-        return response()->json($posts);
-    }
-
-
-    public function store(Request $request)
-    {
-        $this->validate($request,[
-            'title' => 'required',
-            'price' => 'required',
-            'photo' => 'required',
-            'description' => 'required'
-        ]);
-
-        $post = new Post();
-        if($request->hasFile('photo')){
-            $file = $request->file('photp');
-            $allowedfileExtention =['pdf','png','jpg'];
-            $extention=$file->getClientOriginalExtension();
-            $check = in_array($extention, $allowedfileExtention);
-
-            if($check){
-                $name =time() . $file->getClientOriginalName();
-                $file->move('images',$name);
-                $post->photo =$name;
-            }
-        }
-
-        $post->title = $request->input('title');
-        $post->price = $request->input('price');
-        $post->description = $request->input('description');
-
-        $post->save();
-
-        return response()->json($post);
+        
+        return response()->json(Post::all());
     }
 
 
     public function show($id)
     {
-        $post = Post::find($id);
-        return response()->json($post);
+        return response()->json(Post::find($id));
     }
 
-
-    public function update(Request $request ,$id)
+    public function create(Request $request)
     {
-        $this->validate($request,[
-            'title' => 'required',
-            'price' => 'required',
-            'photo' => 'required',
-            'description' => 'required'
-        ]);
-        
-        
-        $post = Post::find($id);
+        $post = Post::create($request->all());
+        return response()->json($post,201);
+    }
 
-        if($request->hasFile('photo')){
-            $file = $request->file('photp');
-            $allowedfileExtention =['pdf','png','jpg'];
-            $extention=$file->getClientOriginalExtension();
-            $check = in_array($extention, $allowedfileExtention);
+    public function update($id, Request $request)
+    {
+        $post = Post::findOrFail($id);
 
-            if($check){
-                $name =time() . $file->getClientOriginalName();
-                $file->move('images',$name);
-                $post->photo =$name;
-            }
-        }
+        $post->update($request->all());
 
-        $post->title = $request->input('title');
-        $post->price = $request->input('price');
-        $post->description = $request->input('description');
-
-        $post->save();
-
-
-        return response()->json($post);
+        return response()->json($post,200);
 
     }
-    public function destory($id)
+    public function delete($id)
     {
-        $post= Post::find($id);
-        $post->delete();
-
+        Post::findOrFail($id)->delete();
+    
         return response() ->json('Deleted Successfully');
 
     }
