@@ -6,9 +6,18 @@ use App\Models\Fib;
 
 class ExampleController extends Controller
 {
+    /**
+     * @var \App\Models\Fib
+     */
+    private $fib;
+
+    public function __construct(Fib $fib)
+    {
+        $this->fib = $fib;
+    }
+
     public function show($id)
     {
-        $fib = new Fib();
-        return $fib->calc($id);
+        return $this->fib->calc($id);
     }
 }
